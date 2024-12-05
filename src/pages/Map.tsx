@@ -5,26 +5,26 @@ import MapMarker from '../components/map/MapMarker';
 
 const containerStyle = {
   width: '100%',
-  height: '600px'
+  height: '600px',
 };
 
 const farms = [
-  { id: 1, position: { lat: -3.745, lng: -38.523 }, type: 'own' as const },
-  { id: 2, position: { lat: -3.742, lng: -38.520 }, type: 'neighbor' as const },
-  { id: 3, position: { lat: -3.748, lng: -38.525 }, type: 'neighbor' as const },
+  { id: 1, position: { lat: -12.0464, lng: -77.0428 }, type: 'own' }, // Cultivo propio
+  { id: 2, position: { lat: -12.046, lng: -77.041 }, type: 'neighbor' }, // Vecino cercano
+  { id: 3, position: { lat: -12.048, lng: -77.045 }, type: 'neighbor' }, // Vecino cercano
 ];
 
 function Map() {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: GOOGLE_MAPS_API_KEY
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   });
 
   const [map, setMap] = React.useState<google.maps.Map | null>(null);
 
   const onLoad = React.useCallback((map: google.maps.Map) => {
     const bounds = new window.google.maps.LatLngBounds();
-    farms.forEach(farm => bounds.extend(farm.position));
+    farms.forEach((farm) => bounds.extend(farm.position));
     map.fitBounds(bounds);
     setMap(map);
   }, []);
@@ -62,8 +62,8 @@ function Map() {
                 {
                   featureType: 'poi',
                   elementType: 'labels',
-                  stylers: [{ visibility: 'off' }]
-                }
+                  stylers: [{ visibility: 'off' }],
+                },
               ],
               mapTypeControl: false,
               streetViewControl: false,

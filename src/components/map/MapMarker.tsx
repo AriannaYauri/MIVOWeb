@@ -12,8 +12,8 @@ function MapMarker({ position, type }: MapMarkerProps) {
       position={position}
       icon={{
         path: google.maps.SymbolPath.CIRCLE,
-        scale: 8,
-        fillColor: type === 'own' ? '#ef4444' : '#22c55e',
+        scale: 100, // Aumenta el tamaño del marcador
+        fillColor: type === 'own' ? '#ef4444' : '#22c55e', // Rojo o verde
         fillOpacity: 1,
         strokeWeight: 2,
         strokeColor: '#ffffff',

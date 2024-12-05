@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Map as MapIcon, Bell, MessageSquare, Leaf, LogOut } from 'lucide-react';
+import { Home, Map as MapIcon, Bell, MessageSquare, Leaf, Bug , LogOut } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 
 function Navbar() {
@@ -26,9 +26,9 @@ function Navbar() {
           
           <div className="flex items-center space-x-4">
             <Link
-              to="/"
+              to="/dashboard"
               className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
-                isActive('/') ? 'text-green-600 bg-green-50' : 'text-gray-600 hover:text-green-600'
+                isActive('/dashboard') ? 'text-green-600 bg-green-50' : 'text-gray-600 hover:text-green-600'
               }`}
             >
               <Home className="h-5 w-5" />
@@ -45,6 +45,16 @@ function Navbar() {
               <span>Mapa</span>
             </Link>
             
+            <Link
+              to="/pest-detection"
+              className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
+                isActive('/PestDetection') ? 'text-green-600 bg-green-50' : 'text-gray-600 hover:text-green-600'
+              }`}
+            >
+              <Bug className="h-5 w-5" />
+              <span>Alertas</span>
+            </Link>
+
             <Link
               to="/notifications"
               className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium ${
@@ -65,17 +75,13 @@ function Navbar() {
               <span>MivoBot</span>
             </Link>
 
-            <div className="border-l border-gray-200 h-6 mx-2" />
 
             <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">{user?.name}</span>
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50"
-              >
-                <LogOut className="h-5 w-5" />
-                <span>Salir</span>
-              </button>
+              <Link to="/"
+              className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-red-600 hover:bg-red-50">
+              <LogOut className="h-5 w-5" />
+               <span>Salir</span>
+              </Link>
             </div>
           </div>
         </div>
