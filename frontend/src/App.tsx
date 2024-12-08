@@ -22,9 +22,9 @@ function App() {
                 <Routes>
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/map" element={<Map />} />
+                  <Route path="/pest-detection" element={<PestDetection />} />
                   <Route path="/notifications" element={<Notifications />} />
                   <Route path="/chat" element={<ChatBot />} />
-                  <Route path="/pest-detection" element={<PestDetection />} />
                 </Routes>
               </main>
             </div>
