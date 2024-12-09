@@ -22,5 +22,5 @@ app.get('/models/intruso', (req, res) => {
 
 // Iniciar el servidor
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en https://mivo-web-asa8.vercel.app/`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
