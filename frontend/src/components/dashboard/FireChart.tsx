@@ -20,7 +20,7 @@ function FireChart() {
   // Obtener datos desde la base de datos con axios
   useEffect(() => {
     axios
-      .get('http://localhost:3000/models/incendio') // Ahora apunta al nuevo puerto
+      .get('https://mivo-web-asa8.vercel.app') // Ahora apunta al nuevo puerto
       .then((response) => {
         const data: FireData[] = response.data;
 

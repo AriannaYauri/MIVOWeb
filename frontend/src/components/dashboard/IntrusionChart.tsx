@@ -14,7 +14,7 @@ function IntrusionChart() {
   // Obtener datos dinámicamente desde el backend
   useEffect(() => {
     axios
-      .get('http://localhost:3000/models/intruso') // Endpoint del backend
+      .get('https://mivo-web-asa8.vercel.app/') // Endpoint del backend
       .then((response) => {
         const data: IntrusionData[] = response.data;
         setIntrusionData(data);
