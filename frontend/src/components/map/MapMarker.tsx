@@ -4,8 +4,8 @@ import { Marker } from '@react-google-maps/api';
 interface MapMarkerProps {
   position: google.maps.LatLngLiteral;
   type: 'own' | 'neighbor';
+  onClick?: () => void;
 }
-
 function MapMarker({ position, type }: MapMarkerProps) {
   return (
     <Marker

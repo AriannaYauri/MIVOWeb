@@ -11,32 +11,51 @@ function ChatBot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: '¡Hola! Soy MivoBot, tu asistente agrícola. ¿En qué puedo ayudarte hoy?',
-      sender: 'bot'
-    }
+      text: '¡Hola! Soy MivoBot, tu asistente agrícola. Haz clic en una pregunta o escribe para empezar.',
+      sender: 'bot',
+    },
   ]);
   const [input, setInput] = useState('');
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const predefinedResponses: { [key: string]: string } = {
+    '¿Qué es el RiceBlast?':
+      'El RiceBlast es una enfermedad causada por un hongo que afecta el arroz. Para controlarlo, puedes usar fungicidas específicos y asegurarte de que el campo esté bien drenado.',
+    '¿Cómo puedo cuidar mis cultivos?':
+      'Puedes cuidar tus cultivos regándolos de manera adecuada, usando fertilizantes según sus necesidades y revisando regularmente si tienen plagas o enfermedades.',
+    '¿Qué fertilizante es bueno para la papa?':
+      'Para la papa, usa fertilizantes ricos en nitrógeno, fósforo y potasio. Asegúrate de aplicarlos durante el crecimiento.',
+    '¿Cómo prevenir plagas en la uva?':
+      'Para prevenir plagas en la uva, realiza podas regulares, mantén el suelo limpio y usa productos orgánicos o insecticidas según sea necesario.',
+    '¿Qué hago si mis cultivos tienen plagas?':
+      'Identifica la plaga primero. Luego, usa insecticidas específicos o busca remedios naturales como extracto de ajo o neem.',
+  };
+
+  const suggestedQuestions = Object.keys(predefinedResponses);
+
+  const handleSend = (question?: string) => {
+    const userMessage = question || input;
+    if (!userMessage.trim()) return;
 
     const newMessage: Message = {
       id: messages.length + 1,
-      text: input,
-      sender: 'user'
+      text: userMessage,
+      sender: 'user',
     };
 
-    setMessages([...messages, newMessage]);
+    setMessages((prev) => [...prev, newMessage]);
     setInput('');
 
-    // Simular respuesta del bot
+    const botResponseText =
+      predefinedResponses[userMessage] ||
+      'Lo siento, no tengo información sobre eso. ¿Puedes preguntar algo más?';
+
     setTimeout(() => {
       const botResponse: Message = {
-        id: messages.length + 2,
-        text: 'Gracias por tu mensaje. Estoy procesando tu consulta...',
-        sender: 'bot'
+        id: newMessage.id + 1,
+        text: botResponseText,
+        sender: 'bot',
       };
-      setMessages(prev => [...prev, botResponse]);
+      setMessages((prev) => [...prev, botResponse]);
     }, 1000);
   };
 
@@ -70,17 +89,31 @@ function ChatBot() {
         </div>
 
         <div className="border-t p-4">
+          <div className="mb-4">
+            <p className="font-bold text-gray-900 mb-2">Preguntas sugeridas:</p>
+            <div className="flex flex-wrap gap-2">
+              {suggestedQuestions.map((question) => (
+                <button
+                  key={question}
+                  onClick={() => handleSend(question)}
+                  className="bg-green-100 text-green-600 px-4 py-2 rounded-lg hover:bg-green-200 transition-colors"
+                >
+                  {question}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="flex space-x-4">
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder="Escribe tu mensaje..."
               className="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <button
-              onClick={handleSend}
+              onClick={() => handleSend()}
               className="bg-green-600 text-white rounded-lg px-6 py-2 hover:bg-green-700 transition-colors"
             >
               <Send className="h-5 w-5" />

@@ -1,26 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Bird, User, Cat } from 'lucide-react';
+import axios from 'axios';
+
+interface IntrusionData {
+  label: string;
+  count: number;
+}
 
 function IntrusionChart() {
-  const intrusionData = {
-    labels: ['Aves', 'Personas', 'Felinos'],
-    datasets: [
-      {
-        data: [50, 30, 20],
-        backgroundColor: [
-          'rgba(34, 197, 94, 0.5)',
-          'rgba(59, 130, 246, 0.5)',
-          'rgba(249, 115, 22, 0.5)',
-        ],
-        borderColor: [
-          'rgba(34, 197, 94, 1)',
-          'rgba(59, 130, 246, 1)',
-          'rgba(249, 115, 22, 1)',
-        ],
-        borderWidth: 1,
-      },
-    ],
+  const [intrusionData, setIntrusionData] = useState<IntrusionData[]>([]);
+
+  // Obtener datos dinámicamente desde el backend
+  useEffect(() => {
+    axios
+      .get('http://localhost:3000/models/intruso') // Endpoint del backend
+      .then((response) => {
+        const data: IntrusionData[] = response.data;
+        setIntrusionData(data);
+      })
+      .catch((error) => {
+        console.error('Error al obtener los datos con axios:', error);
+      });
+  }, []);
+
+  // Transformar datos para el gráfico de pastel
+  const transformData = () => {
+    const labels = intrusionData.map((entry) => entry.label);
+    const counts = intrusionData.map((entry) => entry.count);
+
+    return {
+      labels,
+      datasets: [
+        {
+          data: counts,
+          backgroundColor: [
+            'rgba(34, 197, 94, 0.5)',
+            'rgba(59, 130, 246, 0.5)',
+            'rgba(249, 115, 22, 0.5)',
+          ],
+          borderColor: [
+            'rgba(34, 197, 94, 1)',
+            'rgba(59, 130, 246, 1)',
+            'rgba(249, 115, 22, 1)',
+          ],
+          borderWidth: 1,
+        },
+      ],
+    };
   };
 
   return (
@@ -30,7 +57,7 @@ function IntrusionChart() {
         <span className="text-sm text-red-500">-2% Últimas 24h</span>
       </div>
       <div className="h-64">
-        <Pie data={intrusionData} />
+        <Pie data={transformData()} />
       </div>
       <div className="mt-4 grid grid-cols-3 gap-2 text-sm">
         <div className="flex items-center space-x-1">

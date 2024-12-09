@@ -52,7 +52,7 @@ function Navbar() {
               }`}
             >
               <Bug className="h-5 w-5" />
-              <span>Alertas</span>
+              <span>Plaga</span>
             </Link>
 
             <Link

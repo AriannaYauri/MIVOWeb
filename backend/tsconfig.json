@@ -9,7 +9,9 @@
     },
     "include": [
       "models/FiltroTiempo.ts",
-      "models/incendio.ts"
+      "models/incendio.ts",
+      "models/FiltroIntruso.ts",
+      "models/intruso.ts"
   ], 
     "exclude": ["node_modules"] 
 }
