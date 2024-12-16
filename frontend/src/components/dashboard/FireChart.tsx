@@ -4,46 +4,61 @@ import { Flame } from 'lucide-react';
 import axios from 'axios';
 
 interface FireData {
-  id: string;
-  date: string;
-  count: number;
+  fecha: string;
+  cultivo: string | null;
 }
 
 function FireChart() {
   const [timeframe, setTimeframe] = useState('Semanal'); // Intervalo de tiempo seleccionado
-  const [fireData, setFireData] = useState<Record<string, FireData[]>>({
-    Diario: [],
-    Semanal: [],
-    Mensual: [],
-  });
+  const [fireData, setFireData] = useState<FireData[]>([]);
 
   // Obtener datos desde la base de datos con axios
   useEffect(() => {
     axios
-      .get('http://localhost:3000/models/incendio') // Ahora apunta al nuevo puerto
+      .get('http://10.22.4.98:3000/incendios') // Ruta correcta
       .then((response) => {
-        const data: FireData[] = response.data;
-
-        // Agrupar los datos por id (Diario, Semanal, Mensual)
-        const groupedData: Record<string, FireData[]> = data.reduce((acc, item) => {
-          if (!acc[item.id]) acc[item.id] = [];
-          acc[item.id].push(item);
-          return acc;
-        }, {} as Record<string, FireData[]>);
-
-        setFireData(groupedData);
+        setFireData(response.data); // Almacena los incendios
       })
       .catch((error) => {
         console.error('Error al obtener los datos con axios:', error);
       });
   }, []);
 
+  // Función para agrupar y contar incendios por fecha
+  const groupAndCountData = (interval: string) => {
+    const groupedData: Record<string, number> = {};
+
+    fireData.forEach((entry) => {
+      const date = new Date(entry.fecha); // Convierte la cadena ISO 8601 en un objeto Date
+      let label = '';
+
+      if (interval === 'Diario') {
+        // Formato: DD/MM/YYYY
+        label = date.toLocaleDateString();
+      } else if (interval === 'Semanal') {
+        // Semana del año
+        const weekNumber = Math.ceil(
+          (date.getDate() - date.getDay() + 1) / 7
+        );
+        label = `${date.getFullYear()}-W${weekNumber}`;
+      } else if (interval === 'Mensual') {
+        // Formato: MM/YYYY
+        label = `${date.getMonth() + 1}/${date.getFullYear()}`;
+      }
+
+      // Incrementa el contador de incendios para esa fecha/semana/mes
+      groupedData[label] = (groupedData[label] || 0) + 1;
+    });
+
+    return groupedData;
+  };
+
   // Transformar datos para el gráfico según el intervalo de tiempo seleccionado
   const transformData = () => {
-    const currentData = fireData[timeframe] || [];
+    const groupedData = groupAndCountData(timeframe);
 
-    const labels = currentData.map((entry) => entry.date);
-    const counts = currentData.map((entry) => entry.count);
+    const labels = Object.keys(groupedData);
+    const counts = Object.values(groupedData);
 
     return {
       labels,
@@ -75,9 +90,8 @@ function FireChart() {
         {['Diario', 'Semanal', 'Mensual'].map((option) => (
           <span
             key={option}
-            className={`cursor-pointer ${
-              timeframe === option ? 'font-semibold text-green-600' : 'hover:text-green-600'
-            }`}
+            className={`cursor-pointer ${timeframe === option ? 'font-semibold text-green-600' : 'hover:text-green-600'
+              }`}
             onClick={() => setTimeframe(option)}
           >
             {option}
